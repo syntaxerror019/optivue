@@ -1,0 +1,67 @@
+<!-- Control Bar Component -->
+<div class="control-bar">
+    <button class="control-button" id="playBtn">
+        <span class="button-icon">▶️</span>
+        <span class="button-label">Play</span>
+    </button>
+    
+    <button class="control-button" id="pauseBtn">
+        <span class="button-icon">⏸️</span>
+        <span class="button-label">Pause</span>
+    </button>
+    
+    <button class="control-button" id="stopBtn">
+        <span class="button-icon">⏹️</span>
+        <span class="button-label">Stop</span>
+    </button>
+    
+    <div class="separator"></div>
+    
+    <button class="control-button" id="snapshotBtn">
+        <span class="button-icon">📸</span>
+        <span class="button-label">Snapshot</span>
+    </button>
+    
+    <button class="control-button" id="recordBtn">
+        <span class="button-icon">⏺️</span>
+        <span class="button-label">Record</span>
+    </button>
+    
+    <div class="separator"></div>
+    
+    <button class="control-button" id="zoomInBtn">
+        <span class="button-icon">🔍</span>
+        <span class="button-label">Zoom In</span>
+    </button>
+    
+    <button class="control-button" id="zoomOutBtn">
+        <span class="button-icon">🔎</span>
+        <span class="button-label">Zoom Out</span>
+    </button>
+    
+    <div class="separator"></div>
+    
+    <button class="control-button" id="settingsBtn">
+        <span class="button-icon">⚙️</span>
+        <span class="button-label">Settings</span>
+    </button>
+    
+    <button class="control-button" id="infoBtn">
+        <span class="button-icon">ℹ️</span>
+        <span class="button-label">Info</span>
+    </button>
+</div>
+
+<script>
+    // Add button click handlers
+    document.querySelectorAll('.control-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const label = this.querySelector('.button-label').textContent;
+            console.log(`${label} button clicked`);
+            
+            // Add your button logic here
+            // For example, send commands to your backend:
+            // fetch(`/api/camera/${label.toLowerCase().replace(' ', '-')}`)
+        });
+    });
+</script>

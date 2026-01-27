@@ -1,0 +1,20 @@
+<!-- Status Bar Component -->
+<div class="status-bar">
+    <div class="status-left">
+        <div class="status-indicator">
+            <div class="status-dot {{ status_class|default('') }}"></div>
+            <span>{{ status_text|default('Connected') }}</span>
+        </div>
+        <span>Resolution: {{ resolution|default('640x480') }}</span>
+        <span>Frame rate: {{ framerate|default('30') }} fps</span>
+    </div>
+    <div class="status-right">
+        <span>Compression: {{ compression|default('H.264') }}</span>
+        <span id="host"></span>
+    </div>
+</div>
+
+<script>
+    const hostElement = document.getElementById('host');
+    hostElement.textContent = window.location.host;
+</script>

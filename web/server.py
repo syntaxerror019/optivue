@@ -1,6 +1,6 @@
 import os
 from flask import Flask, Response, render_template
-
+from web.auth import require_basic_auth
 
 class StreamingServer:
     def __init__(self, pipe_dir="/tmp/cam_pipes", host="0.0.0.0", port=5000):
@@ -55,15 +55,25 @@ class StreamingServer:
         for pipe_file in os.listdir(self.pipe_dir):
             if pipe_file.endswith(".mjpeg"):
                 pipe_path = os.path.join(self.pipe_dir, pipe_file)
-                route_name = "/" + pipe_file.replace(".mjpeg", "")
+                route_name = "/stream/" + pipe_file
                 self.app.add_url_rule(route_name, route_name, self.make_mjpeg_route(pipe_path))
                 self.routes_created.append(route_name)
                 print(f"Streaming route created: {route_name}")
-
+    @require_basic_auth
     def index(self):
         """Render a simple HTML page listing all cameras."""
         cameras = self.routes_created
-        return render_template("index.html", cameras=cameras)
+        return render_template('index.html', 
+                         cameras=cameras,
+                         page='live',
+                         page_title='Live View',
+                         camera_name='Camera 1',
+                         camera_ip='192.168.1.100',
+                         resolution='640x480',
+                         framerate='30',
+                         compression='H.264',
+                         status_text='Connected',
+                         status_class='')
 
     def start(self):
         self.add_routes()

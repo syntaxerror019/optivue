@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - OptiVue - Network Camera System</title>
+    
+    <!-- Include global styles -->
+    {% include 'components/styles.html' %}
+    
+    <!-- Page-specific styles -->
+    <style>
+        .settings-container {
+            flex: 1;
+            background-color: #fff;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 40px;
+        }
+
+        .settings-section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .setting-description {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .setting-control {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #3498db;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .save-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .save-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include header -->
+    {% include 'components/header.html' %}
+
+    <!-- Include status bar -->
+    {% include 'components/status_bar.html' %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="settings-container">
+            <h1>Camera Settings</h1>
+            
+            <div class="settings-section">
+                <h2>Video Settings</h2>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Resolution</div>
+                        <div class="setting-description">Set the video resolution</div>
+                    </div>
+                    <div class="setting-control">
+                        <select>
+                            <option>640x480</option>
+                            <option>1280x720</option>
+                            <option>1920x1080</option>
+                            <option>3840x2160</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Frame Rate</div>
+                        <div class="setting-description">Frames per second</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="number" value="30" min="1" max="60">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Compression</div>
+                        <div class="setting-description">Video compression format</div>
+                    </div>
+                    <div class="setting-control">
+                        <select>
+                            <option>H.264</option>
+                            <option>H.265</option>
+                            <option>MJPEG</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2>Network Settings</h2>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Camera IP Address</div>
+                        <div class="setting-description">Static IP address for this camera</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" value="{{ camera_ip|default('192.168.1.100') }}">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Camera Name</div>
+                        <div class="setting-description">Friendly name for identification</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" value="{{ camera_name|default('Camera 1') }}">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">DHCP</div>
+                        <div class="setting-description">Automatically obtain IP address</div>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2>Recording Settings</h2>
+                
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Motion Detection</div>
+                        <div class="setting-description">Automatically record when motion is detected</div>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Recording Quality</div>
+                        <div class="setting-description">Quality level for recordings</div>
+                    </div>
+                    <div class="setting-control">
+                        <select>
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option selected>High</option>
+                            <option>Ultra</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Storage Path</div>
+                        <div class="setting-description">Location to save recordings</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" value="/var/optivue/recordings">
+                    </div>
+                </div>
+            </div>
+
+            <button class="save-button">Save Settings</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.save-button').addEventListener('click', function() {
+            alert('Settings saved! (This would send data to your backend)');
+        });
+    </script>
+</body>
+</html>
