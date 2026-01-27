@@ -1,0 +1,12 @@
+camera:
+  width: 640
+  height: 480
+  fps: 15
+  motion_contour_area: 500
+
+pipes:
+  dir: /tmp/cam_pipes
+
+server:
+  host: 0.0.0.0
+  port: 5000
