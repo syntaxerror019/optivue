@@ -1,12 +1,19 @@
 camera:
-  width: 640
+  compression: mjpeg
+  fps: 60
   height: 480
-  fps: 15
   motion_contour_area: 500
-
+  motion_detection: false
+  width: 640
+cameras:
+- 0
 pipes:
   dir: /tmp/cam_pipes
-
+record:
+  enabled: true
+  recording_length: 60
+  storage_path: /var/optivue/recordings
+  video_retention: 30
 server:
   host: 0.0.0.0
   port: 5000

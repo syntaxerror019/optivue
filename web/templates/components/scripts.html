@@ -1,0 +1,68 @@
+<script>
+    //detect when the user leaves the page
+    document.addEventListener("visibilitychange", () => {
+    const active = !document.hidden;
+    const cameras = document.querySelectorAll("img.camera");
+
+    if (!active) {
+        console.warn("Tab hidden..stopping camera streams");
+        cameras.forEach(cam => {
+        cam.src = "";
+        });
+    } else {
+        console.warn("Tab visible.resuming camera streams");
+        cameras.forEach(cam => {
+        cam.src = cam.dataset.src; // reload stream
+        });
+    }
+    });
+
+
+    //detect when user returns to the page
+    window.addEventListener('load', function() {
+        console.warn("Stream started...");
+        //get all img with id=camera and start the stream
+        const cameras = document.querySelectorAll('img[id=camera]');
+        cameras.forEach(camera => {
+            camera.src = camera.dataset.src;
+        });
+    });
+
+    document.querySelectorAll('.video-feed').forEach(feed => {
+        feed.addEventListener('click', function() {
+            const cameraId = this.getAttribute('data-camera-id');
+            console.log('Camera clicked:', cameraId);
+            // TODO something.
+        });
+    });
+
+    document.querySelectorAll('.video-feed img').forEach(img => {
+        img.addEventListener('error', function() {
+            setTimeout(() => {
+                this.src = this.src; ////eload the stream
+                console.warn('Stream reloaded:', this.src);
+            }, 5000); 
+        });
+    });
+
+    document.getElementById('playBtn').addEventListener('click', function() {
+        console.log('Play button clicked');
+        // Add logic to start the video playback here
+    });
+    document.getElementById('stopBtn').addEventListener('click', function() {
+        console.log('Stop button clicked');
+        // Add logic to stop the video playback here
+    });
+    document.getElementById('snapshotBtn').addEventListener('click', function() {
+        console.log('Snapshot button clicked');
+        const snapshot = document.createElement('canvas');
+        const ctx = snapshot.getContext('2d');
+        const video = document.querySelector('video');
+        ctx.drawImage(video, 0, 0);
+        const link = document.createElement('a');
+        link.setAttribute('href', snapshot.toDataURL());
+        link.setAttribute('target', '_blank');
+        link.innerHTML = 'Open snapshot in new window';
+        document.body.appendChild(link);
+    });
+</script>

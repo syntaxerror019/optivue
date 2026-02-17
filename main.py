@@ -1,43 +1,55 @@
 from stream.produce import CameraProducer
 from utils.config import ConfigLoader
-from utils.indices import detect_cameras
+from utils.restart import restart_script
 from web.server import StreamingServer
-
+import threading
+import os
+import time
 def main():
-    config = ConfigLoader()
+    os.nice(0)
 
-    #get cameras
-    camera_indices = detect_cameras()
-    
-    print(f"Detected cameras: {camera_indices}")
-
-    producers = []
-    for cam_index in camera_indices:
-        producer = CameraProducer(
-            cam_index,
-            pipe_dir=config.pipes_dir,
-            width=config.camera_width,
-            height=config.camera_height,
-            fps=config.camera_fps,
-            motion_area=config.motion_contour_area
-        )
-        producer.start()
-        producers.append(producer)
+    while True:
+        config = ConfigLoader()
         
-    server = StreamingServer(
-        pipe_dir=config.pipes_dir,
-        host=config.server_host,
-        port=config.server_port
-    )
-    
-    server.start()
+        config.clear_refresh()
 
-    try:
-        while True:
-            pass
-    except KeyboardInterrupt:
-        for producer in producers:
-            producer.stop()
+        producers = []
+        for cam_index in config.cameras:
+            p = CameraProducer(
+                cam_index,
+                pipe_dir=config.pipes_dir,
+                width=config.camera_width,
+                height=config.camera_height,
+                fps=config.camera_fps,
+                motion_area=config.motion_contour_area,
+                config=config,
+            )
+            p.start()
+            producers.append(p)
+
+        server = StreamingServer(
+            pipe_dir=config.pipes_dir,
+            host=config.server_host,
+            port=config.server_port,
+            config=config,
+        )
+        server.start()
+
+        # 🔁 Wait until refresh requested
+        try:
+            while not config.check_refresh():
+                time.sleep(0.5)
+        except KeyboardInterrupt:
+            break
+
+        print("🔄 Reloading config...")
+
+        # Stop everything cleanly
+        for p in producers:
+            p.stop()
+        server.stop()
+
+        restart_script()
 
 if __name__ == "__main__":
     main()

@@ -146,11 +146,12 @@
                         <div class="setting-description">Set the video resolution</div>
                     </div>
                     <div class="setting-control">
-                        <select>
-                            <option>640x480</option>
-                            <option>1280x720</option>
-                            <option>1920x1080</option>
-                            <option>3840x2160</option>
+                        <select name="resolution">
+                            {% set res = config.camera_width ~ 'x' ~ config.camera_height %}
+                            <option value="320x240"  {{ 'selected' if res == '320x240' else '' }}>Low (QVGA 320x240)</option>
+                            <option value="640x480"  {{ 'selected' if res == '640x480' else '' }}>Normal (VGA 640x480)</option>
+                            <option value="854x480"  {{ 'selected' if res == '854x480' else '' }}>Medium (SD 854x480)</option>
+                            <option value="1280x720" {{ 'selected' if res == '1280x720' else '' }}>High (HD 1280x720)</option>
                         </select>
                     </div>
                 </div>
@@ -161,7 +162,7 @@
                         <div class="setting-description">Frames per second</div>
                     </div>
                     <div class="setting-control">
-                        <input type="number" value="30" min="1" max="60">
+                        <input name="frameRate" type="number" value="{{ config.camera_fps }}" min="1" max="60">
                     </div>
                 </div>
 
@@ -171,79 +172,72 @@
                         <div class="setting-description">Video compression format</div>
                     </div>
                     <div class="setting-control">
-                        <select>
-                            <option>H.264</option>
-                            <option>H.265</option>
-                            <option>MJPEG</option>
+                        <select name="compression">
+                            <option value="mjpeg" {{ 'selected' if config.compression == 'mjpeg' else '' }}>MJPEG</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="settings-section">
-                <h2>Network Settings</h2>
+                <h2>Motion Settings</h2>
                 
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Camera IP Address</div>
-                        <div class="setting-description">Static IP address for this camera</div>
-                    </div>
-                    <div class="setting-control">
-                        <input type="text" value="{{ camera_ip|default('192.168.1.100') }}">
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div>
-                        <div class="setting-label">Camera Name</div>
-                        <div class="setting-description">Friendly name for identification</div>
-                    </div>
-                    <div class="setting-control">
-                        <input type="text" value="{{ camera_name|default('Camera 1') }}">
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div>
-                        <div class="setting-label">DHCP</div>
-                        <div class="setting-description">Automatically obtain IP address</div>
+                        <div class="setting-label">Motion Detection</div>
+                        <div class="setting-description">Automatically take a photo when motion is detected</div>
                     </div>
                     <div class="setting-control">
                         <label class="toggle-switch">
-                            <input type="checkbox">
+                            <input type="checkbox" name="motionDetection" {{ 'checked' if config.motion_detection else '' }}>
                             <span class="toggle-slider"></span>
                         </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Sensitivity</div>
+                        <div class="setting-description">Motion detection sensitivity</div>
+                    </div>
+                    <div class="setting-control">
+                        <select name="sensitivity">
+                            <option value="100" {{ 'selected' if config.motion_contour_area == 100 else '' }}>Very Sensitive</option>
+                            <option value="300" {{ 'selected' if config.motion_contour_area == 300 else '' }}>Medium Sensitive</option>
+                            <option value="500" {{ 'selected' if config.motion_contour_area == 500 else '' }}>Normal Sensitive</option>
+                            <option value="700" {{ 'selected' if config.motion_contour_area == 700 else '' }}>Low Sensitive</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
             <div class="settings-section">
                 <h2>Recording Settings</h2>
-                
+
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Motion Detection</div>
-                        <div class="setting-description">Automatically record when motion is detected</div>
+                        <div class="setting-label">Record</div>
+                        <div class="setting-description">Record and save footage to disk</div>
                     </div>
                     <div class="setting-control">
                         <label class="toggle-switch">
-                            <input type="checkbox" checked>
+                            <input type="checkbox" name="record" {{ 'checked' if config.record else '' }}>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                 </div>
-
+                
                 <div class="setting-item">
                     <div>
-                        <div class="setting-label">Recording Quality</div>
-                        <div class="setting-description">Quality level for recordings</div>
+                        <div class="setting-label">Recording Length</div>
+                        <div class="setting-description">How long each recorded clip should be</div>
                     </div>
                     <div class="setting-control">
-                        <select>
-                            <option>Low</option>
-                            <option>Medium</option>
-                            <option selected>High</option>
-                            <option>Ultra</option>
+                        <select name="recordingLength">
+                            <option value="10"  {{ 'selected' if config.recording_length == 10 else '' }}>Short (10 minutes)</option>
+                            <option value="30"  {{ 'selected' if config.recording_length == 30 else '' }}>Medium (30 minutes)</option>
+                            <option value="60"  {{ 'selected' if config.recording_length == 60 else '' }}>Normal (1 hour)</option>
+                            <option value="180" {{ 'selected' if config.recording_length == 180 else '' }}>Long (5 hours)</option>
                         </select>
                     </div>
                 </div>
@@ -254,9 +248,30 @@
                         <div class="setting-description">Location to save recordings</div>
                     </div>
                     <div class="setting-control">
-                        <input type="text" value="/var/optivue/recordings">
+                        <input name="storagePath" type="text" value="{{ config.storage_path }}">
                     </div>
                 </div>
+
+                <div class="setting-item">
+                    <div>
+                        <div class="setting-label">Video Retention</div>
+                        <div class="setting-description">How long to keep old recordings</div>
+                    </div>
+                    <div class="setting-control">
+                        <select name="videoRetention">
+                            <option value="1"   {{ 'selected' if config.video_retention == 1 else '' }}>1 Day</option>
+                            <option value="7"   {{ 'selected' if config.video_retention == 7 else '' }}>1 Week</option>
+                            <option value="14"  {{ 'selected' if config.video_retention == 14 else '' }}>2 Weeks</option>
+                            <option value="30"  {{ 'selected' if config.video_retention == 30 else '' }}>1 Month</option>
+                            <option value="365" {{ 'selected' if config.video_retention == 365 else '' }}>1 Year</option>
+                            <option value="0"   {{ 'selected' if config.video_retention == 0 else '' }}>Forever</option>
+                            <option value="-1"  {{ 'selected' if config.video_retention == -1 else '' }}>Until Full</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p>See <code>config.yaml</code> for more advanced options & settings</p>
+
             </div>
 
             <button class="save-button">Save Settings</button>
@@ -265,8 +280,50 @@
 
     <script>
         document.querySelector('.save-button').addEventListener('click', function() {
-            alert('Settings saved! (This would send data to your backend)');
+
+            // get all the variables
+            var resolution = document.querySelector('select[name="resolution"]').value;
+            var frameRate = document.querySelector('input[name="frameRate"]').value;
+            var compression = document.querySelector('select[name="compression"]').value;
+            var motionDetection = document.querySelector('input[name="motionDetection"]').checked;
+            var sensitivity = document.querySelector('select[name="sensitivity"]').value;
+            var record = document.querySelector('input[name="record"]').checked;
+            var recordingLength = document.querySelector('select[name="recordingLength"]').value;
+            var storagePath = document.querySelector('input[name="storagePath"]').value;
+            var videoRetention = document.querySelector('select[name="videoRetention"]').value;
+
+            var settings = {
+                resolution: resolution,
+                frameRate: frameRate,
+                compression: compression,
+                motionDetection: motionDetection,
+                sensitivity: sensitivity,
+                record: record,
+                recordingLength: recordingLength,
+                storagePath: storagePath,
+                videoRetention: videoRetention,
+            };
+
+            fetch('/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settings)
+            });
+
+            alert('Settings saved!');
+            this.setAttribute('data-saved', 'true');
+
         });
+
+        window.addEventListener('beforeunload', function(event) {
+            if (document.querySelector('.save-button').getAttribute('data-saved') !== "true") {
+                event.preventDefault();
+                return confirm('Leaving this page will discard unsaved changes. Are you sure you want to leave?');
+            }
+        });
+        
     </script>
 </body>
 </html>

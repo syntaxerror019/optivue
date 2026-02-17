@@ -17,42 +17,37 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="video-container">
+        <div class="video-container" data-camera-count="{{ cameras|length }}">
             {% for camera in cameras %}
-            <div class="video-feed">
+            <div class="video-feed" data-camera-id="{{ camera.name }}">
                 <!-- OptiVue Watermark -->
-                <div class="optivue-watermark">OptiVue Systems</div>
+                <div class="optivue-watermark">OptiVue</div>
                 
-                <!-- Placeholder Content (replace with actual MJPEG stream) -->
+                <!-- Camera Label -->
+                <div class="camera-label">{{ camera.name }}</div>
+                
+                <!-- Camera Info Overlay (optional) -->
+                {% if camera.show_info %}
+                <div class="camera-info">
+                    {{ camera.resolution|default('000x000') }} pixels<br>
+                    {{ camera.framerate|default('??') }} FPS
+                </div>
+                {% endif %}
+                
+                <!-- Video Stream -->
                 <div class="placeholder-content">
-                    <img src="{{ camera }}" style="width: 100%; height: 100%; object-fit: contain;">
+                    <img src="{{ camera.url }}" 
+                         data-src="{{ camera.url }}"
+                         alt="{{ camera.name }}"
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'text-align:center;color:rgba(255,255,255,0.6);\'><div style=\'font-size:48px;margin-bottom:15px;opacity:0.3;\'>📹</div><div style=\'font-size:14px;\'>Stream Unavailable</div><div style=\'font-size:11px;opacity:0.7;margin-top:5px;\'>{{ camera.name }}</div></div>';">
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Page-specific scripts -->
-    <script>
-        // Example: Replace placeholder with actual MJPEG stream
-        // Uncomment and modify when ready to integrate your stream
-        /*
-        window.addEventListener('DOMContentLoaded', function() {
-            const videoFeed = document.querySelector('.video-feed');
-            const placeholder = document.querySelector('.placeholder-content');
-            
-            // Create img element for MJPEG stream
-            const streamImg = document.createElement('img');
-            streamImg.src = '/stream'; // Your MJPEG stream endpoint
-            streamImg.style.width = '100%';
-            streamImg.style.height = '100%';
-            streamImg.style.objectFit = 'contain';
-            
-            // Replace placeholder with stream
-            placeholder.style.display = 'none';
-            videoFeed.appendChild(streamImg);
-        });
-        */
-    </script>
+    {% include 'components/control_bar.html' %}
+
+    {% include 'components/scripts.html' %}
 </body>
 </html>
