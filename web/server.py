@@ -1,131 +1,174 @@
+"""
+server.py  –  web/server.py
+
+Flask streaming server.  Each client that hits /stream/<name> gets its own
+independent generator pulling from a FrameBuffer – no shared byte-stream,
+no corruption when multiple browsers connect simultaneously.
+"""
+
 import os
+import time
+import threading
+import logging
+
 from flask import Flask, Response, render_template, request
 from web.auth import require_basic_auth
 from utils.config import ConfigSaver
-from werkzeug.serving import make_server
-import threading
+from utils import frame_buffer as fb
+
+log = logging.getLogger(__name__)
+
 
 class StreamingServer:
-    def __init__(self, pipe_dir="/tmp/cam_pipes", host="0.0.0.0", port=5000, config=None):
-        self.pipe_dir = pipe_dir
+    def __init__(self, pipe_dir=None, host="0.0.0.0", port=5000, config=None):
+        # pipe_dir kept for API compatibility but is no longer used
         self.config = config
         self.host = host
         self.port = port
+
         self.app = Flask(__name__)
-        self.routes_created = []
-        
+        self.routes_created: list[dict] = []
         self.config_saver = ConfigSaver()
-        self._server = None
-        self._thread = None
+
+        self._thread: threading.Thread | None = None
         self._stop_event = threading.Event()
 
-        # Index route
-        self.app.route("/")(self.index)
-        self.app.route("/settings", methods=["GET", "POST"])(self.settings)
+        # Static routes
+        self.app.add_url_rule("/", "index", self.index)
+        self.app.add_url_rule("/settings", "settings", self.settings, methods=["GET", "POST"])
 
-    def _generate_mjpeg(self, pipe_path):
-        while True:
-            try:
-                with open(pipe_path, 'rb') as f:
-                    while True:
-                        line = f.readline()
-                        if not line:
-                            continue
-                        if line.startswith(b'--frame'):
-                            # Skip headers
-                            while True:
-                                header = f.readline()
-                                if header == b'\r\n':
-                                    break
-                            data = b''
-                            while True:
-                                chunk = f.readline()
-                                if chunk.startswith(b'--frame') or not chunk:
-                                    break
-                                data += chunk
-                            yield (b'--frame\r\n'
-                                   b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n')
-            except (BrokenPipeError, FileNotFoundError):
-                print(f"[WARN] Pipe {pipe_path} broken, retrying in 0.5s")
-                import time
-                time.sleep(0.5)
+    # ------------------------------------------------------------------
+    # MJPEG streaming  (one generator instance per connected client)
+    # ------------------------------------------------------------------
+
+    def _generate_mjpeg(self, cam_index: int):
+        """
+        Generator that yields multipart MJPEG chunks.
+
+        Runs entirely inside the client's request thread; uses FrameBuffer
+        .subscribe() (I want to try PUBSUB approach here) which is a blocking iterator that wakes on each new frame.
+        Because every caller gets its own independent cursor, simultaneous viewers never interfere with each other.
+        """
+        buf = fb.get(cam_index)
+        if buf is None:
+            return
+
+        for jpeg_bytes in buf.subscribe(timeout=5.0):
+            if jpeg_bytes is None:
+                # Timeout heartbeat – generator will be garbage collected
+                # automatically when the client disconnects
                 continue
 
-    def make_mjpeg_route(self, pipe_path):
-        def route_func():
-            return Response(
-                self._generate_mjpeg(pipe_path),
-                mimetype='multipart/x-mixed-replace; boundary=frame'
+            yield (
+                b"--frame\r\n"
+                b"Content-Type: image/jpeg\r\n\r\n"
+                + jpeg_bytes
+                + b"\r\n"
             )
-        return route_func
+
+    def _make_stream_route(self, cam_index: int):
+        def stream_view():
+            return Response(
+                self._generate_mjpeg(cam_index),
+                mimetype="multipart/x-mixed-replace; boundary=frame",
+            )
+        return stream_view
+
+    # ------------------------------------------------------------------
+    # Route registration  (called after producers have started)
+    # ------------------------------------------------------------------
 
     def add_routes(self):
-        for pipe_file in os.listdir(self.pipe_dir):
-            if pipe_file.endswith(".mjpeg"):
-                pipe_path = os.path.join(self.pipe_dir, pipe_file)
-                route_name = "/stream/" + pipe_file
-                self.app.add_url_rule(route_name, route_name, self.make_mjpeg_route(pipe_path))
-                
-                entry = {
-                    "name": pipe_file,
-                    "url": route_name,
-                    "resolution": f"{self.config.camera_height}x{self.config.camera_width}",
-                    "framerate": self.config.camera_fps,
-                    "show_info" : True
-                }
-                
-                self.routes_created.append(entry)
-                print(f"Streaming route created: {route_name}")
-                
-    #@require_basic_auth
+        for cam_index, buf in fb.all_buffers().items():
+            route_path = f"/stream/cam{cam_index}.mjpeg"
+            endpoint   = f"stream_cam{cam_index}"
+
+            self.app.add_url_rule(
+                route_path, endpoint, self._make_stream_route(cam_index)
+            )
+
+            self.routes_created.append({
+                "name":       f"cam{cam_index}.mjpeg",
+                "url":        route_path,
+                "resolution": f"{self.config.camera_width}x{self.config.camera_height}",
+                "framerate":  self.config.camera_fps,
+                "show_info":  True,
+            })
+            log.info(f"Streaming route registered: {route_path}")
+
+    # ------------------------------------------------------------------
+    # Page routes
+    # ------------------------------------------------------------------
+
+    # Uncomment the decorator below to enable HTTP Basic Auth:
+    # @require_basic_auth
     def index(self):
-        cameras = self.routes_created
-        return render_template('index.html', 
-                         cameras=cameras,
-                         page='live',
-                         page_title='Live View',
-                         status_text='Connected'
-                         )
+        return render_template(
+            "index.html",
+            cameras=self.routes_created,
+            page="live",
+            page_title="Live View",
+            status_text="Connected",
+        )
 
     def settings(self):
-        if request.method == 'GET':
-            return render_template('settings.html', 
-                             page='settings',
-                             page_title='Settings',
-                             status_text='Connected',
-                             config=self.config
-                             )
-        elif request.method == 'POST':
-            data = request.get_json()
-            
+        if request.method == "GET":
+            return render_template(
+                "settings.html",
+                page="settings",
+                page_title="Settings",
+                status_text="Connected",
+                config=self.config,
+            )
+
+        # POST – save JSON settings and trigger config reload
+        data = request.get_json()
+        if not data:
+            return "Bad request", 400
+
+        try:
             self.config_saver.save(
                 **{
-                    'camera.width': int(data['resolution'].split('x')[0]),
-                    'camera.height': int(data['resolution'].split('x')[1]),
-                    'camera.fps': int(data['frameRate']),
-                    'camera.motion_detection': data['motionDetection'],
-                    'camera.motion_contour_area': int(data['sensitivity']),
-                    'record.enabled': bool(data['record']),
-                    'record.recording_length': int(data['recordingLength']),
-                    'record.storage_path': data['storagePath'],
-                    'record.video_retention': int(data['videoRetention'])
+                    "camera.width":               int(data["resolution"].split("x")[0]),
+                    "camera.height":              int(data["resolution"].split("x")[1]),
+                    "camera.fps":                 int(data["frameRate"]),
+                    "camera.motion_detection":    bool(data["motionDetection"]),
+                    "camera.motion_contour_area": int(data["sensitivity"]),
+                    "record.enabled":             bool(data["record"]),
+                    "record.recording_length":    int(data["recordingLength"]),
+                    "record.storage_path":        data["storagePath"],
+                    "record.video_retention":     int(data["videoRetention"]),
                 }
             )
-            
-            return 'ok',200
+        except (KeyError, ValueError) as exc:
+            log.error(f"Settings save error: {exc}")
+            return f"Invalid data: {exc}", 400
+
+        return "ok", 200
+
+    # ------------------------------------------------------------------
+    # Server lifecycle
+    # ------------------------------------------------------------------
 
     def start(self):
-            self.add_routes()
-            print(f"Starting server on http://{self.host}:{self.port}")
+        self.add_routes()
+        log.info(f"Starting server on http://{self.host}:{self.port}")
 
-            def run_app():
-                self.app.run(host=self.host, port=self.port, threaded=True, use_reloader=False)
+        def run():
+            # use_reloader=False is required when running inside a thread
+            self.app.run(
+                host=self.host,
+                port=self.port,
+                threaded=True,
+                use_reloader=False,
+            )
 
-            self._thread = threading.Thread(target=run_app, daemon=True)
-            self._thread.start()
-        
+        self._thread = threading.Thread(target=run, daemon=True, name="flask-server")
+        self._thread.start()
+
     def stop(self):
-        if self._server:
-            print("Stopping Flask server...")
-            self._stop_event.set()
-            self._thread.join()
+        # Flask's dev server has no clean shutdown via thread;
+        # since the thread is daemonised it dies with the process.
+        # For production, swap app.run() for a Werkzeug/Waitress server.
+        self._stop_event.set()
+        log.info("StreamingServer stop requested.")
