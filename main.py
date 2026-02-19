@@ -1,11 +1,3 @@
-"""
-main.py
-
-Entry point.  Starts one CameraProducer per configured camera, then
-starts the Flask streaming server.  Waits for a config-reload signal,
-then tears everything down and restarts.
-"""
-
 import os
 import time
 import threading

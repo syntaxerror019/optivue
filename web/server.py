@@ -11,9 +11,10 @@ import time
 import threading
 import logging
 
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, send_from_directory
 from web.auth import require_basic_auth
 from utils.config import ConfigSaver
+from utils.footage import Footage
 from utils import frame_buffer as fb
 
 log = logging.getLogger(__name__)
@@ -36,6 +37,8 @@ class StreamingServer:
         # Static routes
         self.app.add_url_rule("/", "index", self.index)
         self.app.add_url_rule("/settings", "settings", self.settings, methods=["GET", "POST"])
+        self.app.add_url_rule("/recordings", "recordings", self.recordings, methods=["GET"])
+        self.app.add_url_rule("/media/<path:filename>", "static_files", self._serve_static)
 
     # ------------------------------------------------------------------
     # MJPEG streaming  (one generator instance per connected client)
@@ -108,6 +111,41 @@ class StreamingServer:
             cameras=self.routes_created,
             page="live",
             page_title="Live View",
+            status_text="Connected",
+        )
+        
+
+    def _serve_static(self, filename):
+        if filename.endswith(".jpg"):
+            return send_from_directory(
+                os.path.join(self.config.storage_path, "snapshots"),
+                filename,
+                mimetype="image/jpeg"
+            )
+
+        if filename.endswith(".mp4"):
+            return send_from_directory(
+                self.config.storage_path,
+                filename,
+                mimetype="video/mp4",
+                conditional=True  # enables range request support for seeking
+            )
+
+        return send_from_directory(
+            self.config.storage_path,
+            filename,
+            mimetype="application/octet-stream"
+        )
+        
+    def recordings(self):
+        footage = Footage(self.config.storage_path)
+        cameras = footage.get_all_media()
+        print(cameras)
+        return render_template(
+            "recordings.html",
+            cameras=cameras,
+            page="recordings",
+            page_title="Recordings",
             status_text="Connected",
         )
 
