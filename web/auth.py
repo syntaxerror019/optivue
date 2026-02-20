@@ -9,6 +9,7 @@ USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 
 def check_auth(username, password):
+    print(f"Checking auth against: {username}:{password} (expected: {USERNAME}:{PASSWORD})")
     return username == USERNAME and password == PASSWORD
 
 def auth_required():

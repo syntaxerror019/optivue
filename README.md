@@ -43,6 +43,15 @@ pip install -r requirements.txt
 cp config.example.yaml config.yaml
 ```
 
+Create a `.env` file in the root directory (same directory as `main.py`)
+Put the following contents into the `.env` file, replacing the USERNAME and PASSWORD
+These will be the credentials asked for upon opening some pages on the web interface.
+```bash
+USERNAME=your_username
+PASSWORD=your_secure_password
+```
+
+Next you need to configure everything to your specific environment.
 Edit `config.yaml` with your camera details, then:
 
 ```bash
