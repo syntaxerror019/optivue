@@ -2,48 +2,48 @@
 
 # OptiVue
 
-**A self-hosted, all-in-one CCTV system built for simplicity and low-power hardware.**
+**Self-hosted, all-in-one CCTV system. Runs on anything.**
 
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.x-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![Platform](https://img.shields.io/badge/Tested%20on-Raspberry%20Pi%203B%2B-C51A4A?logo=raspberrypi&logoColor=white)](https://www.raspberrypi.com)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20RPi-brightgreen)]()
 [![Status](https://img.shields.io/badge/Status-In%20Development-orange)]()
-[![License](https://img.shields.io/badge/License-MIT-green)]()
+[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 </div>
 
 ---
 
-OptiVue is a lightweight, browser-based NVR (Network Video Recorder) built with Python and Flask. Connect your IP cameras, open a browser, and you have a fully functional CCTV system with live viewing, recording, motion detection, and snapshot capture -- no cloud, no subscriptions, no bloat.
+OptiVue is a lightweight, self-hosted camera management system built with Python and Flask. It handles live viewing, continuous recording, motion detection, and snapshot capture through a clean browser-based interface -- no cloud, no subscriptions, no bloat.
 
-Designed to run on modest hardware. Tested and working on a Raspberry Pi 3B+.
+Designed to run on low-powered hardware. Tested on a Raspberry Pi 3B+.
 
 ---
 
 ## Features
 
-| Feature | Details |
+| Feature | Description |
 |---|---|
-| Live View | Multi-camera browser-based stream viewer |
-| Recording | Adjustable and 24/7 continuous clip recording |
-| Motion Detection | Trigger-based recording on detected movement |
-| Photo Detection | Automatic snapshot capture on activity |
-| Recordings Browser | Review and filter clips and snapshots by date and time |
-| Web Config | Camera and system settings managed through the UI |
-| Lightweight | Minimal dependencies, runs on low-power hardware |
+| Live view | Multi-camera grid, accessible from any browser on your network |
+| Recording | Continuous or scheduled recording, configurable per camera |
+| Motion detection | Trigger clips and snapshots on movement |
+| Photo capture | Periodic or event-driven snapshots with timestamps |
+| Recordings browser | Review clips and snapshots, filterable by date and time |
+| Lightweight | Minimal dependencies, runs comfortably on older hardware |
+| Web config | Camera and system settings managed through the UI |
 
 ---
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/yourusername/optivue.git
+git clone https://github.com/syntaxerror019name/optivue.git
 cd optivue
 pip install -r requirements.txt
 cp config.example.yaml config.yaml
 ```
 
-Edit `config.yaml` with your camera RTSP URLs, then:
+Edit `config.yaml` with your camera details, then:
 
 ```bash
 python main.py
@@ -51,29 +51,15 @@ python main.py
 
 Open `http://localhost:5000` in your browser.
 
-See the [Quick Start](../../wiki/Quick-Start) wiki page for the full setup guide including Raspberry Pi instructions and running as a background service.
+See the [Quick Start wiki page](../../wiki/Quick-Start) for the full setup guide, including how to run OptiVue as a background service.
 
 ---
 
 ## Requirements
 
 - Python 3.9+
-- FFmpeg (on system PATH)
-- RTSP-capable IP cameras
-
----
-
-## Documentation
-
-Full documentation is in the [Wiki](../../wiki).
-
-| Page | Description |
-|---|---|
-| [Quick Start](../../wiki/Quick-Start) | Install, configure, and get running |
-| [Configuration](../../wiki/Configuration) | All `config.yaml` options explained |
-| [API Reference](../../wiki/API-Reference) | REST endpoints |
-| [Camera Compatibility](../../wiki/Camera-Compatibility) | Tested cameras and RTSP URL formats |
-| [Troubleshooting](../../wiki/Troubleshooting) | Common issues and fixes |
+- FFmpeg (must be on your system PATH)
+- USB or RTSP-capable IP cameras
 
 ---
 
@@ -82,38 +68,63 @@ Full documentation is in the [Wiki](../../wiki).
 ```
 optivue/
 ├── main.py
-├── config.yaml                  # Your config (gitignored)
+├── config.yaml             # Your config (gitignored)
 ├── config.example.yaml
 ├── requirements.txt
 ├── templates/
 │   ├── components/
-│   │   ├── styles.html
 │   │   ├── header.html
 │   │   ├── status_bar.html
-│   │   └── control_bar.html
-│   ├── index.html               # Live view
-│   └── recordings.html          # Recordings browser
-└── storage/                     # Clips and snapshots (gitignored)
+│   │   ├── control_bar.html
+│   │   └── styles.html
+│   ├── index.html          # Live view
+│   └── recordings.html     # Recordings browser
+└── storage/                # Clips and snapshots saved here
 ```
+
+---
+
+## Documentation
+
+Full documentation is in the [Wiki](../../wiki):
+
+- [Home](../../wiki/Home)
+- [Quick Start](../../wiki/Quick-Start)
+- [Configuration](../../wiki/Configuration)
+- [Troubleshooting](../../wiki/Troubleshooting)
+
+---
+
+## Hardware
+
+OptiVue is built to be hardware-agnostic. If it can run Python and FFmpeg, it can run OptiVue.
+
+| Hardware | Status |
+|---|---|
+| Raspberry Pi 3B+ | Tested, working |
+| Raspberry Pi 4 | Expected to work |
+| Any Linux x86_64 machine | Tested, working |
 
 ---
 
 ## Roadmap
 
 - [x] Live multi-camera view
-- [x] Continuous and scheduled recording
+- [x] Continuous recording
 - [x] Motion detection
 - [x] Snapshot capture
 - [x] Recordings browser with date/time filtering
 - [ ] Push alerts (email / webhook)
+- [ ] Per-camera motion sensitivity controls
 - [ ] Mobile-optimised UI
-- [ ] User authentication
 
 ---
 
 ## Contributing
 
-Issues and pull requests are welcome. If you find a bug or have a feature request, please [open an issue](../../issues) first.
+Issues and pull requests are welcome. If you find a bug or want to request a feature, open an issue and describe what you're seeing or what you need.
+
+---
 
 ## License
 
