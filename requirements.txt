@@ -1,0 +1,7 @@
+Flask
+python-dotenv
+opencv-python
+numpy
+PyYAML
+watchdog
+psutil

@@ -137,6 +137,7 @@ class StreamingServer:
             mimetype="application/octet-stream"
         )
         
+    @require_basic_auth
     def recordings(self):
         footage = Footage(self.config.storage_path)
         cameras = footage.get_all_media()
@@ -149,6 +150,7 @@ class StreamingServer:
             status_text="Connected",
         )
 
+    @require_basic_auth
     def settings(self):
         if request.method == "GET":
             return render_template(

@@ -9,6 +9,7 @@ db.sqlite3
 instance/
 .env
 .tox
+log.txt
 coverage.xml
 nosetests.xml
 build/

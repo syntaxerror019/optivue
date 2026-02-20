@@ -1,8 +1,6 @@
 import os
 import time
-import threading
 import logging
-
 from stream.produce import CameraProducer
 from utils.config import ConfigLoader
 from utils.restart import restart_script
@@ -11,9 +9,12 @@ from web.server import StreamingServer
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("log.txt"),
+    ]
 )
 log = logging.getLogger(__name__)
-
 
 def main():
     os.nice(0)
