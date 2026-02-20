@@ -12,7 +12,7 @@ cameras:
 record:
   enabled: true            # Whether recording is enabled or not
   recording_length: 1      # How long each recording should be in minutes
-  storage_path: /home/miles/optivue/recordings
+  storage_path: /home/user/optivue
   video_retention: 30      # in days
 
 server:
