@@ -58,29 +58,8 @@ See the [Quick Start wiki page](../../wiki/Quick-Start) for the full setup guide
 ## Requirements
 
 - Python 3.9+
-- FFmpeg (must be on your system PATH)
-- USB or RTSP-capable IP cameras
-
----
-
-## Project Structure
-
-```
-optivue/
-├── main.py
-├── config.yaml             # Your config (gitignored)
-├── config.example.yaml
-├── requirements.txt
-├── templates/
-│   ├── components/
-│   │   ├── header.html
-│   │   ├── status_bar.html
-│   │   ├── control_bar.html
-│   │   └── styles.html
-│   ├── index.html          # Live view
-│   └── recordings.html     # Recordings browser
-└── storage/                # Clips and snapshots saved here
-```
+- OpenCV ([Learn to install quickly on RPi](https://www.mileshilliard.com/posts/rpi-cv2/))
+- USB camera(s) connected physically
 
 ---
 
@@ -97,7 +76,7 @@ Full documentation is in the [Wiki](../../wiki):
 
 ## Hardware
 
-OptiVue is built to be hardware-agnostic. If it can run Python and FFmpeg, it can run OptiVue.
+OptiVue is built to be hardware-agnostic.
 
 | Hardware | Status |
 |---|---|
@@ -128,4 +107,4 @@ Issues and pull requests are welcome. If you find a bug or want to request a fea
 
 ## License
 
-MIT
+[MIT](LICENSE)
