@@ -37,7 +37,7 @@ Designed to run on low-powered hardware. Tested on a Raspberry Pi 3B+.
 ## Quick Start
 
 ```bash
-git clone https://github.com/syntaxerror019name/optivue.git
+git clone https://github.com/syntaxerror019/optivue.git
 cd optivue
 pip install -r requirements.txt
 cp config.example.yaml config.yaml
