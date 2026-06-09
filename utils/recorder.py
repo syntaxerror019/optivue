@@ -22,6 +22,7 @@ import time
 import threading
 import datetime
 import logging
+import shutil
 
 log = logging.getLogger(__name__)
 
@@ -165,17 +166,50 @@ class CameraRecorder:
     def _retention_loop(self) -> None:
         while not self._stop_event.is_set():
             self._delete_old_clips()
-            for _ in range(60):
-                if self._stop_event.wait(timeout=60):
-                    return
+            if self._stop_event.wait(timeout=60):
+                return
 
     def _delete_old_clips(self) -> None:
-        retention_days = self.config.video_retention
-        if retention_days <= 0:
-            return
-
         storage = self.config.storage_path
         if not os.path.isdir(storage):
+            return
+
+        # 1. Enforce disk space limit (Until Full logic + safety buffer)
+        # We enforce this ALWAYS to prevent crashes, but especially for "Until Full"
+        BUFFER_BYTES = 5 * 1024 * 1024 * 1024  # 5 GB
+        
+        try:
+            total, used, free = shutil.disk_usage(storage)
+            
+            # If free space is less than buffer, delete oldest clips until we have enough
+            if free < BUFFER_BYTES:
+                mp4s = []
+                for fname in os.listdir(storage):
+                    if fname.endswith(".mp4"):
+                        fpath = os.path.join(storage, fname)
+                        try:
+                            mp4s.append((os.path.getmtime(fpath), fpath))
+                        except OSError:
+                            pass
+                
+                mp4s.sort(key=lambda x: x[0])
+                
+                for _, fpath in mp4s:
+                    if free >= BUFFER_BYTES:
+                        break
+                    try:
+                        size = os.path.getsize(fpath)
+                        os.remove(fpath)
+                        free += size
+                        log.info(f"[Recorder] Deleted old clip due to low disk space: {fpath}")
+                    except OSError as exc:
+                        log.warning(f"[Recorder] Could not delete {fpath}: {exc}")
+        except Exception as e:
+            log.error(f"[Recorder] Disk space check failed: {e}")
+
+        # 2. Enforce time-based retention
+        retention_days = float(self.config.video_retention)
+        if retention_days <= 0:
             return
 
         cutoff = time.time() - retention_days * 86400
@@ -192,4 +226,4 @@ class CameraRecorder:
                 log.warning(f"[Recorder] Could not delete {fpath}: {exc}")
 
         if deleted:
-            log.info(f"[Recorder cam{self.cam_index}] Deleted {deleted} old clip(s)")
+            log.info(f"[Recorder cam{self.cam_index}] Deleted {deleted} old clip(s) based on retention time.")

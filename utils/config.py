@@ -37,7 +37,7 @@ class ConfigLoader:
         self.record = record.get("enabled", True)
         self.recording_length = record.get("recording_length", 60)
         self.storage_path = record.get("storage_path", "/var/optivue/recordings")
-        self.video_retention = record.get("video_retention", 30)
+        self.video_retention = float(record.get("video_retention", 30))
 
         server = cfg.get("server", {})
         self.server_host = server.get("host", "0.0.0.0")

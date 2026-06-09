@@ -259,7 +259,10 @@
                     </div>
                     <div class="setting-control">
                         <select name="videoRetention">
+                            <option value="0.25"{{ 'selected' if config.video_retention == 0.25 else '' }}>6 Hours</option>
+                            <option value="0.5" {{ 'selected' if config.video_retention == 0.5 else '' }}>12 Hours</option>
                             <option value="1"   {{ 'selected' if config.video_retention == 1 else '' }}>1 Day</option>
+                            <option value="3"   {{ 'selected' if config.video_retention == 3 else '' }}>3 Days</option>
                             <option value="7"   {{ 'selected' if config.video_retention == 7 else '' }}>1 Week</option>
                             <option value="14"  {{ 'selected' if config.video_retention == 14 else '' }}>2 Weeks</option>
                             <option value="30"  {{ 'selected' if config.video_retention == 30 else '' }}>1 Month</option>

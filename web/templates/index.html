@@ -46,6 +46,15 @@
         </div>
     </div>
 
+    <!-- Video Modal Component -->
+    <div class="modal-overlay" id="videoModal" onclick="closeVideoModal(event)">
+        <div class="modal-content video-modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeVideoModal(event)">&times;</button>
+            <div class="modal-title" id="videoModalTitle">Live Stream</div>
+            <img id="modalVideo" src="" alt="Live Stream">
+        </div>
+    </div>
+
     {% include 'components/control_bar.html' %}
 
     {% include 'components/scripts.html' %}

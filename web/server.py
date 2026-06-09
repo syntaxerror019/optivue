@@ -177,7 +177,7 @@ class StreamingServer:
                     "record.enabled":             bool(data["record"]),
                     "record.recording_length":    int(data["recordingLength"]),
                     "record.storage_path":        data["storagePath"],
-                    "record.video_retention":     int(data["videoRetention"]),
+                    "record.video_retention":     float(data["videoRetention"]),
                 }
             )
         except (KeyError, ValueError) as exc:

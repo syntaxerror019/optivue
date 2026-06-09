@@ -13,89 +13,92 @@
 .main-content {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 125px);
+    height: calc(100vh - 143px); /* Match header + status + control = 143px */
     overflow: hidden;
+    background: #0f1115;
 }
 
 /* ── FILTER STRIP ────────────────────────────────────────── */
 .filter-strip {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
-    padding: 8px 15px;
-    background: linear-gradient(to bottom, #2c2c2c 0%, #1a1a1a 100%);
-    border-bottom: 1px solid #000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    padding: 12px 20px;
+    background: rgba(15, 17, 21, 0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     flex-shrink: 0;
+    overflow-x: auto;
 }
 
 .filter-label {
-    color: #aaa;
-    font-size: 12px;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .filter-strip input[type="date"],
 .filter-strip input[type="time"] {
-    padding: 5px 10px;
-    background: #111;
-    border: 1px solid #444;
-    border-radius: 3px;
-    color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    color: #e2e8f0;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 13px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
     color-scheme: dark;
 }
 
 .filter-strip input[type="date"]:focus,
 .filter-strip input[type="time"]:focus {
-    border-color: #3498db;
+    border-color: #3b82f6;
+    background: rgba(255,255,255,0.1);
 }
 
 .filter-btn {
-    padding: 5px 14px;
-    border: 1px solid #555;
-    border-radius: 3px;
-    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
-    color: #333;
-    font-size: 12px;
+    padding: 7px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    color: #e2e8f0;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .filter-btn:hover {
-    background: linear-gradient(to bottom, #fff 0%, #e8e8e8 100%);
-    border-color: #333;
+    background: rgba(255,255,255,0.1);
 }
 
 .filter-btn.primary {
-    background: #3498db;
-    border-color: #2980b9;
+    background: #3b82f6;
+    border-color: #2563eb;
     color: #fff;
 }
 
 .filter-btn.primary:hover {
-    background: #2980b9;
+    background: #2563eb;
 }
 
 .filter-divider {
     width: 1px;
-    height: 22px;
-    background: #444;
+    height: 24px;
+    background: rgba(255,255,255,0.1);
     flex-shrink: 0;
+    margin: 0 4px;
 }
 
 .filter-result-count {
     margin-left: auto;
-    font-size: 11px;
-    color: #aaa;
+    font-size: 12px;
+    color: #94a3b8;
+    white-space: nowrap;
 }
 
 .filter-result-count span {
-    color: #3498db;
+    color: #3b82f6;
     font-weight: bold;
 }
 
@@ -103,25 +106,24 @@
 .recordings-container {
     flex: 1;
     overflow-y: auto;
-    padding: 15px;
-    background: #1a1a1a;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
 }
 
 /* ── CAMERA CARD ─────────────────────────────────────────── */
 .camera-card {
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
     overflow: hidden;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .camera-card:hover {
-    border-color: #3498db;
-    box-shadow: 0 4px 16px rgba(52,152,219,0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .camera-card.collapsed .camera-body {
@@ -132,57 +134,58 @@
 .camera-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 15px;
-    background: linear-gradient(to bottom, #2c2c2c 0%, #222 100%);
-    border-bottom: 1px solid #333;
-    border-left: 3px solid #3498db;
+    gap: 15px;
+    padding: 15px 20px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-left: 4px solid #3b82f6;
     cursor: pointer;
     user-select: none;
     transition: background 0.2s;
 }
 
 .camera-header:hover {
-    background: linear-gradient(to bottom, #333 0%, #2a2a2a 100%);
+    background: rgba(255,255,255,0.06);
 }
 
 .cam-name {
-    font-size: 15px;
-    font-weight: bold;
-    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f8fafc;
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
 .cam-stats {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     margin-left: auto;
 }
 
 .cam-stat {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: #aaa;
+    gap: 8px;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
 }
 
 .cam-stat-value {
-    background: rgba(52,152,219,0.15);
-    border: 1px solid rgba(52,152,219,0.3);
-    border-radius: 3px;
-    padding: 1px 7px;
-    font-size: 11px;
-    font-weight: bold;
-    color: #3498db;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #3b82f6;
     font-family: monospace;
 }
 
 .toggle-indicator {
-    font-size: 10px;
-    color: #666;
-    transition: transform 0.25s;
+    font-size: 12px;
+    color: #64748b;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
 }
 
@@ -192,67 +195,107 @@
 
 /* ── CAMERA BODY ─────────────────────────────────────────── */
 .camera-body {
-    padding: 15px;
-    background: #111;
+    padding: 20px;
+    background: transparent;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
 }
 
-/* ── SECTION LABEL ───────────────────────────────────────── */
+/* ── MEDIA SECTION ───────────────────────────────────────── */
+.media-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .section-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    font-size: 11px;
-    font-weight: bold;
-    color: #aaa;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
 }
 
 .section-label::before {
     content: '';
     display: inline-block;
-    width: 3px;
-    height: 3px;
-    background: #3498db;
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
     border-radius: 50%;
-    box-shadow: 0 0 5px rgba(52,152,219,0.8);
-    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
 }
 
-.section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #2a2a2a;
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #e2e8f0;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 0.8);
+    border-color: #3b82f6;
+}
+
+.page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.page-info {
+    font-size: 12px;
+    color: #64748b;
+    font-variant-numeric: tabular-nums;
 }
 
 /* ── SNAPSHOTS GRID ──────────────────────────────────────── */
 .snapshots-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
 }
 
 .snapshot-item {
     position: relative;
     aspect-ratio: 16/9;
     overflow: hidden;
-    border-radius: 3px;
-    border: 1px solid #333;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
     background: #000;
     cursor: pointer;
     display: block;
-    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .snapshot-item:hover {
-    border-color: #3498db;
-    transform: scale(1.03);
-    box-shadow: 0 4px 14px rgba(52,152,219,0.35);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 10px rgba(59, 130, 246, 0.2);
 }
 
 .snapshot-item img {
@@ -260,22 +303,22 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.25s;
+    transition: transform 0.4s ease;
 }
 
 .snapshot-item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
 .snapshot-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%);
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.3s;
     display: flex;
     align-items: flex-end;
-    padding: 6px 8px;
+    padding: 8px 10px;
 }
 
 .snapshot-item:hover .snapshot-overlay {
@@ -284,46 +327,40 @@
 
 .snapshot-ts {
     font-family: monospace;
-    font-size: 9px;
-    color: #3498db;
+    font-size: 11px;
+    color: #e2e8f0;
+    font-weight: 500;
 }
 
 /* ── CLIPS LIST ──────────────────────────────────────────── */
 .clips-list {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    max-height: 320px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #444 #111;
+    gap: 6px;
 }
-
-.clips-list::-webkit-scrollbar { width: 4px; }
-.clips-list::-webkit-scrollbar-track { background: #111; }
-.clips-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
 
 .clip-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 8px 12px;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    border-radius: 3px;
-    transition: background 0.15s, border-color 0.15s;
+    gap: 15px;
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .clip-row:hover {
-    background: #222;
-    border-color: #3498db;
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateX(2px);
 }
 
 .clip-index {
     font-family: monospace;
-    font-size: 10px;
-    color: #555;
-    width: 20px;
+    font-size: 12px;
+    color: #64748b;
+    width: 24px;
     text-align: right;
     flex-shrink: 0;
 }
@@ -336,81 +373,87 @@
 }
 
 .clip-date {
-    font-size: 10px;
-    color: #666;
+    font-size: 11px;
+    color: #94a3b8;
     font-family: monospace;
 }
 
 .clip-time {
-    font-size: 13px;
-    font-weight: bold;
-    color: #ddd;
+    font-size: 14px;
+    font-weight: 700;
+    color: #f8fafc;
     font-family: monospace;
 }
 
 .clip-actions {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
 }
 
 .clip-btn {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: 3px;
-    font-size: 11px;
-    font-weight: bold;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
     text-decoration: none;
     border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s;
 }
 
 .clip-btn.view {
-    background: #3498db;
-    color: #fff;
-    border-color: #2980b9;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-color: rgba(59, 130, 246, 0.3);
 }
 
 .clip-btn.view:hover {
-    background: #2980b9;
-    box-shadow: 0 0 8px rgba(52,152,219,0.4);
+    background: #3b82f6;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .clip-btn.download {
-    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
-    color: #333;
-    border-color: #999;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.05);
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,0.1);
 }
 
 .clip-btn.download:hover {
-    background: linear-gradient(to bottom, #fff 0%, #e8e8e8 100%);
-    border-color: #666;
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
 }
 
 .clip-btn svg {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     fill: currentColor;
     flex-shrink: 0;
 }
 
 /* ── EMPTY STATE ─────────────────────────────────────────── */
 .empty-state {
-    padding: 24px;
+    padding: 30px;
     text-align: center;
-    font-size: 12px;
-    color: #555;
+    font-size: 14px;
+    color: #64748b;
+    background: rgba(255,255,255,0.01);
+    border-radius: 6px;
+    border: 1px dashed rgba(255,255,255,0.1);
 }
 
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 768px) {
-    .filter-strip { flex-wrap: wrap; gap: 6px; }
+    .filter-strip { flex-wrap: wrap; gap: 8px; padding: 10px; }
     .cam-stats { display: none; }
-    .snapshots-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+    .snapshots-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .camera-header { padding: 12px 15px; }
+    .camera-body { padding: 15px; }
+    .clip-row { padding: 8px 10px; gap: 10px; }
 }
 </style>
 </head>
@@ -458,25 +501,39 @@
             <div class="camera-body">
 
                 {% if media.snapshots %}
-                <div>
-                    <div class="section-label">Snapshots &nbsp;·&nbsp; {{ media.snapshots|length }} files</div>
-                    <div class="snapshots-grid">
+                <div class="media-section" data-type="snapshots">
+                    <div class="section-header">
+                        <div class="section-label">Snapshots &nbsp;·&nbsp; <span class="item-count">{{ media.snapshots|length }}</span> files</div>
+                        <div class="pagination-controls">
+                            <button class="page-btn prev" onclick="changePage(this, -1)">◀</button>
+                            <span class="page-info">Page <span class="current-page">1</span> of <span class="total-pages">1</span></span>
+                            <button class="page-btn next" onclick="changePage(this, 1)">▶</button>
+                        </div>
+                    </div>
+                    <div class="snapshots-grid media-grid">
                         {% for snap in media.snapshots %}
-                        <a class="snapshot-item" href="/media/{{ snap.filename }}" target="_blank">
+                        <div class="snapshot-item" onclick="openImageModal('/media/{{ snap.filename }}', '{{ snap.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}', '{{ cam }}')">
                             <img src="/media/{{ snap.filename }}" alt="{{ cam }} snapshot" loading="lazy">
                             <div class="snapshot-overlay">
                                 <span class="snapshot-ts">{{ snap.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
                             </div>
-                        </a>
+                        </div>
                         {% endfor %}
                     </div>
                 </div>
                 {% endif %}
 
                 {% if media.clips %}
-                <div>
-                    <div class="section-label">Clips &nbsp;·&nbsp; {{ media.clips|length }} recordings</div>
-                    <div class="clips-list">
+                <div class="media-section" data-type="clips">
+                    <div class="section-header">
+                        <div class="section-label">Clips &nbsp;·&nbsp; <span class="item-count">{{ media.clips|length }}</span> recordings</div>
+                        <div class="pagination-controls">
+                            <button class="page-btn prev" onclick="changePage(this, -1)">◀</button>
+                            <span class="page-info">Page <span class="current-page">1</span> of <span class="total-pages">1</span></span>
+                            <button class="page-btn next" onclick="changePage(this, 1)">▶</button>
+                        </div>
+                    </div>
+                    <div class="clips-list media-grid">
                         {% for clip in media.clips %}
                         <div class="clip-row" data-timestamp="{{ clip.timestamp.strftime('%Y-%m-%dT%H:%M:%S') }}">
                             <span class="clip-index">{{ '%02d'|format(loop.index) }}</span>
@@ -510,21 +567,122 @@
     </div>
 </div>
 
+<!-- Image Modal Component -->
+<div class="modal-overlay" id="imageModal" onclick="closeImageModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeImageModal(event)">&times;</button>
+        <div class="modal-title" id="modalTitle">Camera Snapshot</div>
+        <img id="modalImage" src="" alt="Snapshot Large View">
+        <div class="modal-actions">
+            <a href="#" id="modalDownloadBtn" download class="modal-btn">
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 12L3 7h3V1h4v6h3L8 12zM1 14h14v1.5H1z"/></svg>
+                Download
+            </a>
+        </div>
+    </div>
+</div>
+
 {% include 'components/control_bar.html' %}
 
 <script>
+// --- Pagination Logic ---
+const ITEMS_PER_PAGE = {
+    'snapshots': 18,
+    'clips': 10
+};
+
+// Store current page for each section block
+const state = new WeakMap();
+
+function initPagination() {
+    document.querySelectorAll('.media-section').forEach(section => {
+        const type = section.getAttribute('data-type');
+        const items = Array.from(section.querySelector('.media-grid').children);
+        
+        state.set(section, {
+            currentPage: 1,
+            itemsPerPage: ITEMS_PER_PAGE[type] || 10,
+            items: items,
+            filteredItems: items // for filtering later
+        });
+
+        renderPage(section);
+    });
+}
+
+function renderPage(section) {
+    const s = state.get(section);
+    const totalPages = Math.ceil(s.filteredItems.length / s.itemsPerPage) || 1;
+    
+    // Ensure current page is valid
+    if (s.currentPage > totalPages) s.currentPage = totalPages;
+    if (s.currentPage < 1) s.currentPage = 1;
+
+    const startIdx = (s.currentPage - 1) * s.itemsPerPage;
+    const endIdx = startIdx + s.itemsPerPage;
+
+    // Hide all first
+    s.items.forEach(item => item.style.display = 'none');
+
+    // Show only items on current page
+    s.filteredItems.slice(startIdx, endIdx).forEach(item => {
+        item.style.display = '';
+    });
+
+    // Update UI
+    section.querySelector('.current-page').textContent = s.currentPage;
+    section.querySelector('.total-pages').textContent = totalPages;
+    section.querySelector('.item-count').textContent = s.filteredItems.length;
+
+    // Update buttons
+    const prevBtn = section.querySelector('.page-btn.prev');
+    const nextBtn = section.querySelector('.page-btn.next');
+    prevBtn.disabled = (s.currentPage === 1);
+    nextBtn.disabled = (s.currentPage === totalPages);
+}
+
+function changePage(btn, delta) {
+    const section = btn.closest('.media-section');
+    const s = state.get(section);
+    s.currentPage += delta;
+    renderPage(section);
+}
+
+// --- Interaction Logic ---
 function toggleCard(headerEl) {
     const card = headerEl.parentElement;
     card.classList.toggle('collapsed');
 }
 
+// --- Image Modal Logic ---
+function openImageModal(url, timestamp, cameraName) {
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('modalImage');
+    const title = document.getElementById('modalTitle');
+    const downloadBtn = document.getElementById('modalDownloadBtn');
+
+    img.src = url;
+    title.textContent = cameraName + ' - ' + timestamp;
+    downloadBtn.href = url;
+    downloadBtn.download = cameraName + '_' + timestamp.replace(/[: ]/g, '_') + '.jpg';
+
+    modal.classList.add('active');
+}
+
+function closeImageModal(e) {
+    if (e) e.preventDefault();
+    const modal = document.getElementById('imageModal');
+    modal.classList.remove('active');
+    setTimeout(() => { document.getElementById('modalImage').src = ''; }, 300);
+}
+
+// --- Filter Logic ---
 function filterByDate() {
     const startDate = document.getElementById('start-date').value;
     const startTime = document.getElementById('start-time').value || '00:00:00';
     const endDate   = document.getElementById('end-date').value;
     const endTime   = document.getElementById('end-time').value || '23:59:59';
 
-    // Build full ISO strings for comparison — empty if no date set
     const startDT = startDate ? `${startDate}T${startTime}` : null;
     const endDT   = endDate   ? `${endDate}T${endTime}`     : null;
 
@@ -533,21 +691,33 @@ function filterByDate() {
     document.querySelectorAll('.camera-card').forEach(card => {
         let hasVisible = false;
 
-        card.querySelectorAll('.clip-row').forEach(clip => {
-            const dt = clip.getAttribute('data-timestamp');
-            const visible = (!startDT || dt >= startDT) && (!endDT || dt <= endDT);
-            clip.style.display = visible ? '' : 'none';
-            if (visible) { hasVisible = true; totalClips++; }
+        card.querySelectorAll('.media-section[data-type="clips"]').forEach(section => {
+            const s = state.get(section);
+            s.filteredItems = s.items.filter(clip => {
+                const dt = clip.getAttribute('data-timestamp');
+                return (!startDT || dt >= startDT) && (!endDT || dt <= endDT);
+            });
+            
+            s.currentPage = 1;
+            renderPage(section);
+
+            if (s.filteredItems.length > 0) {
+                hasVisible = true;
+                totalClips += s.filteredItems.length;
+            }
         });
 
-        const hasClips = card.querySelectorAll('.clip-row').length > 0;
-        card.style.display = (!hasClips || hasVisible) ? '' : 'none';
-        if (!hasClips || hasVisible) visibleCards++;
+        // Hide card if completely filtered out (we only filter clips, snapshots remain unaffected for now unless we add timestamp data to them)
+        const hasClipsSection = card.querySelector('.media-section[data-type="clips"]');
+        if (hasClipsSection) {
+            card.style.display = hasVisible ? '' : 'none';
+            if (hasVisible) visibleCards++;
+        }
     });
 
     const el = document.getElementById('result-count');
     el.innerHTML = (startDate || endDate)
-        ? `<span>${totalClips}</span> clips across <span>${visibleCards}</span> cameras`
+        ? `<span>${totalClips}</span> clips found`
         : '';
 }
 
@@ -556,12 +726,23 @@ function clearFilter() {
     document.getElementById('start-time').value = '';
     document.getElementById('end-date').value = '';
     document.getElementById('end-time').value = '';
+    
     document.querySelectorAll('.camera-card').forEach(card => {
         card.style.display = '';
-        card.querySelectorAll('.clip-row').forEach(c => c.style.display = '');
+        card.querySelectorAll('.media-section[data-type="clips"]').forEach(section => {
+            const s = state.get(section);
+            s.filteredItems = [...s.items];
+            s.currentPage = 1;
+            renderPage(section);
+        });
     });
     document.getElementById('result-count').innerHTML = '';
 }
+
+// Initialize pagination on load
+document.addEventListener('DOMContentLoaded', () => {
+    initPagination();
+});
 </script>
 </body>
 </html>

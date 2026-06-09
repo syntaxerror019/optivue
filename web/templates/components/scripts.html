@@ -31,10 +31,32 @@
     document.querySelectorAll('.video-feed').forEach(feed => {
         feed.addEventListener('click', function() {
             const cameraId = this.getAttribute('data-camera-id');
-            console.log('Camera clicked:', cameraId);
-            // TODO something.
+            const img = this.querySelector('img');
+            if (img && img.dataset.src) {
+                openVideoModal(img.dataset.src, cameraId);
+            }
         });
     });
+
+    function openVideoModal(url, cameraName) {
+        const modal = document.getElementById('videoModal');
+        if (!modal) return; // Only exists on index.html
+        const modalImg = document.getElementById('modalVideo');
+        const title = document.getElementById('videoModalTitle');
+        
+        modalImg.src = url;
+        title.textContent = "Live Stream: " + cameraName;
+        modal.classList.add('active');
+    }
+
+    function closeVideoModal(e) {
+        if (e) e.preventDefault();
+        const modal = document.getElementById('videoModal');
+        if (!modal) return;
+        modal.classList.remove('active');
+        // Delay clearing the src to allow transition to finish
+        setTimeout(() => { document.getElementById('modalVideo').src = ''; }, 300);
+    }
 
     document.querySelectorAll('.video-feed img').forEach(img => {
         img.addEventListener('error', function() {
